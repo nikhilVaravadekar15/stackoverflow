@@ -150,24 +150,6 @@ input[type=number] {
 
 /* width */
 *::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-/* Track */
-*::-webkit-scrollbar-track {
-  margin-block: 2px;
-  border-radius: 8px;
-  background: #8f8f8f;
-}
-
-/* Handle */
-*::-webkit-scrollbar-thumb {
-  border-radius: 8px;
-  background: #5f5f5f;
-}
-
-/* Handle on hover */
-*::-webkit-scrollbar-thumb:hover {
-  background: #3d3d3d;
+  width: 0px;
+  height: 0px;
 }
