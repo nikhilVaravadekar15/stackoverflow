@@ -1,11 +1,25 @@
 /* eslint-disable @next/next/link-passhref */
 import Link from "next/link";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import SearchDialog from "./SearchDialog";
+import {
+    Avatar,
+    AvatarFallback,
+    AvatarImage,
+} from "@/components/ui/avatar"
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip"
+import SearchModal from "./SearchModal";
+import AuthModal from "./AuthModal";
+import { getAuthSession } from "@/utility/next-auth/auth";
 
 
-export default function Header() {
+export default async function Header() {
+    const session = await getAuthSession()
+
     return (
         <div className="bg-gray-100 w-full">
             <div className="container py-3 flex items-center justify-between">
@@ -22,7 +36,7 @@ export default function Header() {
                     </div>
                 </Link>
                 <div className="flex gap-3 items-center justify-center">
-                    <SearchDialog />
+                    <SearchModal />
                     <Link href={"/ask-a-question"} className="w-40 flex h-10 items-center justify-around bg-slate-200 border cursor-pointer shadow-md border-slate-300 rounded-full hover:border-orange-500">
                         <div className="flex items-center font-bold text-sm text-slate-600">
                             Ask a question
@@ -32,18 +46,25 @@ export default function Header() {
                         </div>
                     </Link>
                 </div>
-                <div className="flex gap-2 items-center justify-center">
-                    <Button
-                        asChild
-                        className="text-black bg-white border rounded-3xl shadow-md hover:text-white hover:bg-gray-800">
-                        <Link href="/login">Login</Link>
-                    </Button>
-                    <Button
-                        asChild
-                        className="text-white bg-slate-800 border rounded-3xl shadow-md hover:text-orange-500 hover:bg-gray-900">
-                        <Link href="/sign-up">Sign up</Link>
-                    </Button>
-                </div>
+                {
+                    !session ? (
+                        <AuthModal />
+                    ) : (
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Avatar className="border border-slate-500 rounded-full cursor-pointer">
+                                        <AvatarImage src={`${session?.user?.image}`} alt={`${session?.user?.name}`} />
+                                        <AvatarFallback>{session?.user?.name?.substring(0, 2)}</AvatarFallback>
+                                    </Avatar>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>{session?.user?.name}</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
+                    )
+                }
             </div>
         </div>
     )

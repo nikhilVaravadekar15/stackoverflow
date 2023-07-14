@@ -12,7 +12,7 @@ import {
 import { AiOutlineSearch } from "react-icons/ai"
 
 
-export default function SearchDialog() {
+export default function SearchModal() {
     const [searchQuery, setSearchQuery] = useState<string>("")
     return (
         <Dialog>
@@ -40,7 +40,7 @@ export default function SearchDialog() {
                             placeholder="Search..."
                             value={searchQuery}
                             onChange={(event: any) => setSearchQuery(event.target.value)}
-                            className="w-full text-lg text-slate-800 border-none outline-none focus:border-none focus:outline-none"
+                            className="w-full text-lg text-slate-800 bg-transparent border-none outline-none focus:border-none focus:outline-none"
                         />
                     </div>
                 </DialogHeader>
