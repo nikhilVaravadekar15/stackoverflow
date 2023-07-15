@@ -1,5 +1,4 @@
 /* eslint-disable import/no-anonymous-default-export */
-import { TUSerSignUp } from "@/types/types";
 import { PrismaClient, User } from "@prisma/client";
 
 class UserService {

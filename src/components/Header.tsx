@@ -1,21 +1,12 @@
 /* eslint-disable @next/next/link-passhref */
 import Link from "next/link";
 import Image from "next/image";
-import {
-    Avatar,
-    AvatarFallback,
-    AvatarImage,
-} from "@/components/ui/avatar"
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from "@/components/ui/tooltip"
 import SearchModal from "./SearchModal";
 import AuthModal from "./AuthModal";
 import { getAuthSession } from "@/utility/next-auth/auth";
-
+import ProfileModal from "./ProfileModal";
+import SettingsModal from "./SettingsModal";
+import LogoutDialog from "./LogoutDialog";
 
 export default async function Header() {
     const session = await getAuthSession()
@@ -50,19 +41,15 @@ export default async function Header() {
                     !session ? (
                         <AuthModal />
                     ) : (
-                        <TooltipProvider>
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <Avatar className="border border-slate-500 rounded-full cursor-pointer">
-                                        <AvatarImage src={`${session?.user?.image}`} alt={`${session?.user?.name}`} />
-                                        <AvatarFallback>{session?.user?.name?.substring(0, 2)}</AvatarFallback>
-                                    </Avatar>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                    <p>{session?.user?.name}</p>
-                                </TooltipContent>
-                            </Tooltip>
-                        </TooltipProvider>
+                        <div className="flex gap-1 items-center justify-center">
+                            <ProfileModal
+                                name={session?.user?.name}
+                                email={session?.user?.email}
+                                image={session?.user?.image}
+                            />
+                            <SettingsModal />
+                            <LogoutDialog />
+                        </div>
                     )
                 }
             </div>
