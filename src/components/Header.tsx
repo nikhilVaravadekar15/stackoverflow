@@ -26,7 +26,7 @@ export default async function Header() {
                 </Link>
                 <div className="flex gap-3 items-center justify-center">
                     <SearchModal />
-                    <Link href={"/ask-a-question"} className="w-40 flex h-10 items-center justify-around bg-slate-200 border cursor-pointer shadow-md border-slate-300 rounded-full hover:border-orange-500">
+                    <Link href={"/question/ask"} className="w-40 flex h-10 items-center justify-around bg-slate-200 border cursor-pointer shadow-md border-slate-300 rounded-full hover:border-orange-500">
                         <div className="flex items-center font-bold text-sm text-slate-600">
                             Ask a question
                         </div>

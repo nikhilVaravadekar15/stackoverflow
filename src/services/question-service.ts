@@ -4,6 +4,14 @@ import { User } from "@prisma/client";
 
 class QuestionService {
 
+    async getQuestion(id: string) {
+        return await db.question.findUnique({
+            where: {
+                id: id
+            }
+        })
+    }
+
     async getQuestions() {
         return await db.question.findMany({
             include: {
@@ -11,7 +19,7 @@ class QuestionService {
             },
             take: 10,
             orderBy: {
-                asked: "asc"
+                asked: "desc"
             }
         })
     }
@@ -26,6 +34,14 @@ class QuestionService {
                         email: user.email!
                     }
                 }
+            }
+        })
+    }
+
+    async deleteQuestion(id: string) {
+        return await db.question.delete({
+            where: {
+                id: id
             }
         })
     }

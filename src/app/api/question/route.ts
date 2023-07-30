@@ -1,9 +1,43 @@
-import { Question, User } from '@prisma/client';
 import { getAuthSession } from "@/utility/next-auth/auth";
 import userService from '@/services/user-service';
-import questionService from '@/services/question-service';
 import { TQuestionBody } from '@/types/types';
+import { Question, User } from '@prisma/client';
+import questionService from '@/services/question-service';
 
+export async function GET(request: Request, response: Response) {
+    let dbquestions: Question[] | []
+
+    // 2. check all fields are present
+    try {
+        dbquestions = await questionService.getQuestions()
+        if (!dbquestions) {
+            throw new Error()
+        }
+    } catch (error) {
+        return new Response(
+            JSON.stringify(
+                {
+                    "message": "Something went wrong, please try again."
+                }
+            ),
+            {
+                status: 500,
+            }
+        )
+    }
+
+    return new Response(
+        JSON.stringify(
+            {
+                "status": true,
+                "data": dbquestions!
+            }
+        ),
+        {
+            status: 200,
+        }
+    )
+}
 
 export async function POST(request: Request, response: Response) {
     let body: TQuestionBody
@@ -71,7 +105,7 @@ export async function POST(request: Request, response: Response) {
             )
         }
         // 3. add question to database
-        dbquestion = await questionService.insert(question, discription.toString(), user!)
+        dbquestion = await questionService.insert(question, discription, user!)
         if (!dbquestion) {
             throw new Error()
         }
@@ -88,7 +122,6 @@ export async function POST(request: Request, response: Response) {
         )
     }
 
-
     // 4. response
     return new Response(
         JSON.stringify(
@@ -98,6 +131,61 @@ export async function POST(request: Request, response: Response) {
         ),
         {
             status: 201,
+        }
+    )
+}
+
+// # TODO 
+export async function DELETE(request: Request, response: Response) {
+
+    let dbquestion: Question | null
+    let body: { id: string }
+
+    try {
+        // 1. check all fields are present
+        body = await request.json()
+        const { id } = body
+        if (!id) {
+            return new Response(
+                JSON.stringify(
+                    {
+                        "message": "All fields are required,  Missing mandatory fields"
+                    }
+                ),
+                {
+                    status: 400,
+                }
+            )
+        }
+        // 2. delete question from database
+        dbquestion = await questionService.deleteQuestion(id)
+        if (!dbquestion) {
+            throw new Error()
+        }
+    } catch (error) {
+        console.log(error)
+        return new Response(
+            JSON.stringify(
+                {
+                    "message": "Something went wrong, please try again."
+                }
+            ),
+            {
+                status: 500,
+            }
+        )
+    }
+
+    return new Response(
+        JSON.stringify(
+            {
+                "status": true,
+                "dbquestion": dbquestion
+
+            }
+        ),
+        {
+            status: 202,
         }
     )
 }

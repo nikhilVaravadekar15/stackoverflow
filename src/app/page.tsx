@@ -15,16 +15,15 @@ export type TPagination = {
 }
 
 export default async function Home() {
-
   const dbQuestions: DBQuestions[] | null = await questionService.getQuestions()
 
   return (
     <main className="h-screen w-screen flex flex-col">
       <Header />
-      <div className="container py-1 overflow-y-scroll">
+      <div className="container h-full py-1 overflow-y-scroll">
         {
           dbQuestions.length === 0 && (
-            <div className="h-[80%] border flex gap-2 flex-col items-center justify-center">
+            <div className="h-full flex gap-2 flex-col items-center justify-center">
               <Image
                 src={"/stack-underflow.jpg"}
                 alt="stack-underflow"
@@ -40,13 +39,12 @@ export default async function Home() {
           )
         }
         {
-          dbQuestions.length && (
+          dbQuestions.length != 0 && (
             <div className="flex flex-col gap-2 items-center justify-center">
               <div className="Questions h-full w-4/5 flex flex-col gap-1">
                 <Accordion type="single" collapsible className="w-full flex flex-col gap-2">
                   {
                     dbQuestions.length && dbQuestions.map((question: DBQuestions, index: number) => {
-                      console.log(question)
                       return (
                         <Question key={index} question={question} />
                       )

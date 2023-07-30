@@ -14,10 +14,10 @@ export const axiosRequestConfig: AxiosRequestConfig = {
 // List of all the endpoints
 export function postQuestion({ question, discription }: TQuestionBody) {
     return axios.post(
-        API_BASE_URL + "/api/post-question",
+        API_BASE_URL + "/api/question",
         {
             "question": question,
-            "description": discription
+            "discription": discription
         },
         axiosRequestConfig
     )
