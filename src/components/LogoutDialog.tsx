@@ -1,4 +1,5 @@
 "use client"
+
 import {
     AiOutlineLogout
 } from "react-icons/ai"
@@ -21,8 +22,11 @@ export default function LogoutDialog() {
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
-                <Button className="p-2.5 border border-slate-500 rounded-full cursor-pointer bg-transparent hover:bg-slate-200">
-                    <AiOutlineLogout size={"1.25rem"} className="text-slate-600" />
+                <Button variant={"destructive"} className="w-full p-2.5 border border-slate-500 rounded-md cursor-pointer bg-red-400 hover:bg-red-500">
+                    <div className="flex gap-3 items-center justify-between">
+                        <AiOutlineLogout size={"1rem"} className="text-white" />
+                        <span>Log out</span>
+                    </div>
                 </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>

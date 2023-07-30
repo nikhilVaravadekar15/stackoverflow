@@ -41,13 +41,16 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String     @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?    @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
+  Question      Question[]
+  Answer        Answer[]
+  Comment       Comment[]
 }
 
 model VerificationToken {
@@ -56,4 +59,45 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Question {
+  id          String    @id @default(cuid())
+  title       String
+  description String?   @db.LongText
+  upvotes     Int       @default(0)
+  downvotes   Int       @default(0)
+  answers     Answer[]
+  comments    Comment[]
+  asked       DateTime  @default(now())
+  modified    DateTime?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+model Answer {
+  id          String    @id @default(cuid())
+  description String?   @db.LongText
+  upvotes     Int       @default(0)
+  downvotes   Int       @default(0)
+  asked       DateTime  @default(now())
+  modified    DateTime?
+
+  userId     String
+  user       User      @relation(fields: [userId], references: [id])
+  questionId String?
+  Question   Question? @relation(fields: [questionId], references: [id])
+}
+
+model Comment {
+  id          String    @id @default(cuid())
+  description String?   @db.Text
+  asked       DateTime  @default(now())
+  modified    DateTime?
+
+  userId     String
+  user       User      @relation(fields: [userId], references: [id])
+  questionId String?
+  Question   Question? @relation(fields: [questionId], references: [id])
 }

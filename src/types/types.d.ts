@@ -4,3 +4,8 @@ export type TUser = {
     email?: string | null | undefined;
     image?: string | null | undefined;
 }
+
+export type TQuestionBody = {
+    question: string,
+    discription: string
+}

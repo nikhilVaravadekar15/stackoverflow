@@ -1,15 +1,11 @@
 /* eslint-disable import/no-anonymous-default-export */
+import { db } from "@/lib/db";
 import { PrismaClient, User } from "@prisma/client";
 
 class UserService {
-    private prisma: PrismaClient
-
-    constructor() {
-        this.prisma = new PrismaClient()
-    }
 
     async findUserAccount(email: string) {
-        return await this.prisma.account.findFirst({
+        return await db.account.findFirst({
             where: {
                 user: {
                     email: email
@@ -17,6 +13,14 @@ class UserService {
             },
             include: {
                 user: true
+            }
+        })
+    }
+
+    async findUniqueUser(email: string) {
+        return await db.user.findUnique({
+            where: {
+                email: email
             }
         })
     }

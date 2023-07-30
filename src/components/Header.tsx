@@ -4,9 +4,7 @@ import Image from "next/image";
 import SearchModal from "./SearchModal";
 import AuthModal from "./AuthModal";
 import { getAuthSession } from "@/utility/next-auth/auth";
-import ProfileModal from "./ProfileModal";
-import SettingsModal from "./SettingsModal";
-import LogoutDialog from "./LogoutDialog";
+import UserProfileSettings from "./UserProfileSettings";
 
 export default async function Header() {
     const session = await getAuthSession()
@@ -42,13 +40,11 @@ export default async function Header() {
                         <AuthModal />
                     ) : (
                         <div className="flex gap-1 items-center justify-center">
-                            <ProfileModal
+                            <UserProfileSettings
                                 name={session?.user?.name}
                                 email={session?.user?.email}
                                 image={session?.user?.image}
                             />
-                            <SettingsModal />
-                            <LogoutDialog />
                         </div>
                     )
                 }
