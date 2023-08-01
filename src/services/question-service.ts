@@ -8,20 +8,29 @@ class QuestionService {
         return await db.question.findUnique({
             where: {
                 id: id
+            },
+            include: {
+                user: true,
+                answers: true,
+                comments: true
             }
         })
     }
 
-    async getQuestions() {
-        return await db.question.findMany({
-            include: {
-                user: true
-            },
-            take: 10,
-            orderBy: {
-                asked: "desc"
-            }
-        })
+    async getQuestions(limit: number = 10, pageNumber: number = 1, sort: string = "desc", search: string = "") {
+        return await db.$transaction([
+            db.question.count(),
+            db.question.findMany({
+                include: {
+                    user: true
+                },
+                skip: (pageNumber - 1) * limit,
+                take: limit,
+                orderBy: {
+                    asked: sort == "desc" ? "desc" : "asc"
+                }
+            })
+        ])
     }
 
     async insert(question: string, discription: string, user: User) {

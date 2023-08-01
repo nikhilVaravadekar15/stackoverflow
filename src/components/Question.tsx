@@ -8,13 +8,14 @@ import {
 import Preview from "./Preview"
 import UserAvatar from "./UserAvatar"
 import { Question } from '@prisma/client'
+import { months } from '@/data'
 
 
 export default function Question({ question }: { question: Question }) {
 
     return (
         <AccordionItem value={`${question.id}`}>
-            <AccordionTrigger className="px-4 w-full flex gap-3 border rounded-md">
+            <AccordionTrigger className="px-4 w-full flex gap-3 border rounded-md data-[state=open]:shadow-lg">
                 <div className="w-[12%] flex flex-col gap-1 items-end">
                     <span className="text-base text-slate-600">0 votes</span>
                     <span className="text-base text-slate-600">0 answers</span>
@@ -30,7 +31,7 @@ export default function Question({ question }: { question: Question }) {
                             image={question?.user!.image}
                         />
                         <div className="text-xs flex items-center justify-center text-slate-600">
-                            {question.asked.toDateString()}
+                            {`${months[new Date(question?.asked.toString()!).getMonth()]} ${new Date(question?.asked.toString()!).getDate()}, ${new Date(question?.asked.toString()!).getFullYear()}`}
                         </div>
                     </div>
                 </div>

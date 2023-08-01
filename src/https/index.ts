@@ -22,3 +22,17 @@ export function postQuestion({ question, discription }: TQuestionBody) {
         axiosRequestConfig
     )
 }
+
+export function getQuestion(qid: string) {
+    return axios.get(
+        API_BASE_URL + `/api/question?qid=${qid}`,
+        axiosRequestConfig
+    )
+}
+
+export function getQuestions(limit: number = 10, pageNumber: number = 1, sort: string = "desc", search: string = "") {
+    return axios.get(
+        API_BASE_URL + `/api/question?limit=${limit}&pageNumber=${pageNumber}&sortBy=${sort}&search=${search}`,
+        axiosRequestConfig
+    )
+}

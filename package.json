@@ -29,7 +29,7 @@
     "eslint-config-next": "^12.0.4",
     "lucide-react": "^0.257.0",
     "md-editor-rt": "^4.2.2",
-    "next": "13.4.7",
+    "next": "^13.4.12",
     "next-auth": "^4.22.1",
     "nodemailer": "^6.9.3",
     "react": "18.2.0",
@@ -46,7 +46,7 @@
     "encoding": "^0.1.13",
     "postcss": "8.4.24",
     "prisma": "^4.14.1",
-    "tailwind-merge": "^1.13.2",
+    "tailwind-merge": "^1.14.0",
     "tailwindcss": "3.3.2",
     "tailwindcss-animate": "^1.0.6",
     "typescript": "5.1.6"

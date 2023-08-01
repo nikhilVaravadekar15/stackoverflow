@@ -1,3 +1,5 @@
+"use client"
+
 import React from 'react'
 import Link from 'next/link'
 import {
@@ -16,7 +18,7 @@ import LogoutDialog from './LogoutDialog'
 export default function UserProfileSettings({ name, email, image }: TUser) {
     return (
         <Popover>
-            <PopoverTrigger asChild>
+            <PopoverTrigger>
                 <UserAvatar
                     name={name}
                     email={email}

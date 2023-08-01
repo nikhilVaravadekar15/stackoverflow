@@ -5,15 +5,31 @@ import { Question, User } from '@prisma/client';
 import questionService from '@/services/question-service';
 
 export async function GET(request: Request, response: Response) {
+    let dbquestionsLength: number
+    let dbquestion: Question | null
     let dbquestions: Question[] | []
+    const url: URL = new URL(request.url)
 
-    // 2. check all fields are present
+    const qid: string = url.searchParams.get("qid")!
+    const limit: number = parseInt(url.searchParams.get("limit")!)!
+    const pageNumber: number = parseInt(url.searchParams.get("pageNumber")!)!
+    const sortBy: string = url.searchParams.get("sortBy")!
+    const search: string = url.searchParams.get("search")!
+
     try {
-        dbquestions = await questionService.getQuestions()
-        if (!dbquestions) {
-            throw new Error()
+        if (qid) {
+            dbquestion = await questionService.getQuestion(qid)
+            if (!dbquestion) {
+                throw new Error()
+            }
+        } else {
+            [dbquestionsLength, dbquestions] = await questionService.getQuestions(limit, pageNumber, sortBy, search)
+            if (!dbquestions) {
+                throw new Error()
+            }
         }
-    } catch (error) {
+    } catch (error: any) {
+        console.log(error)
         return new Response(
             JSON.stringify(
                 {
@@ -30,7 +46,10 @@ export async function GET(request: Request, response: Response) {
         JSON.stringify(
             {
                 "status": true,
-                "data": dbquestions!
+                "data": qid ? dbquestion! : {
+                    "questions": dbquestions!,
+                    "totalPageCount": Math.ceil(dbquestionsLength! / limit)
+                }
             }
         ),
         {
@@ -75,7 +94,8 @@ export async function POST(request: Request, response: Response) {
                 }
             )
         }
-    } catch (error) {
+    } catch (error: any) {
+        console.log(error)
         return new Response(
             JSON.stringify(
                 {
@@ -109,7 +129,8 @@ export async function POST(request: Request, response: Response) {
         if (!dbquestion) {
             throw new Error()
         }
-    } catch (error) {
+    } catch (error: any) {
+        console.log(error)
         return new Response(
             JSON.stringify(
                 {
@@ -162,7 +183,7 @@ export async function DELETE(request: Request, response: Response) {
         if (!dbquestion) {
             throw new Error()
         }
-    } catch (error) {
+    } catch (error: any) {
         console.log(error)
         return new Response(
             JSON.stringify(

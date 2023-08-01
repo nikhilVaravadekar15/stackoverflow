@@ -1,13 +1,15 @@
+"use client"
+
 /* eslint-disable @next/next/link-passhref */
 import Link from "next/link";
 import Image from "next/image";
 import SearchModal from "./SearchModal";
 import AuthModal from "./AuthModal";
-import { getAuthSession } from "@/utility/next-auth/auth";
+import { useSession } from "next-auth/react";
 import UserProfileSettings from "./UserProfileSettings";
 
-export default async function Header() {
-    const session = await getAuthSession()
+export default function Header() {
+    const { data: session, status } = useSession()
 
     return (
         <div className="bg-gray-100 w-full">
