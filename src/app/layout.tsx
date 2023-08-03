@@ -1,7 +1,8 @@
 import './globals.css'
 import { Metadata } from 'next'
-import AuthProvider from '@/components/Providers/AuthProvider'
 import { Toaster } from '@/components/ui/toaster'
+import AuthProvider from '@/components/Providers/AuthProvider'
+import QueryClientProvider from '@/components/Providers/QueryClientProvider'
 
 export const metadata: Metadata = {
   title: "Stack Overflow",
@@ -29,12 +30,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <AuthProvider>
-        <body>
-          {children}
-          <Toaster />
-        </body>
-      </AuthProvider>
+      <QueryClientProvider>
+        <AuthProvider>
+          <body>
+            {children}
+            <Toaster />
+          </body>
+        </AuthProvider>
+      </QueryClientProvider>
     </html>
   )
 }

@@ -23,16 +23,18 @@ export function postQuestion({ question, discription }: TQuestionBody) {
     )
 }
 
-export function getQuestion(qid: string) {
-    return axios.get(
+export async function getQuestion(qid: string) {
+    const response = await axios.get(
         API_BASE_URL + `/api/question?qid=${qid}`,
         axiosRequestConfig
     )
+    return response.data
 }
 
-export function getQuestions(limit: number = 10, pageNumber: number = 1, sort: string = "desc", search: string = "") {
-    return axios.get(
+export async function getQuestions(limit: number = 10, pageNumber: number = 1, sort: string = "desc", search: string = "") {
+    const response = await axios.get(
         API_BASE_URL + `/api/question?limit=${limit}&pageNumber=${pageNumber}&sortBy=${sort}&search=${search}`,
         axiosRequestConfig
     )
+    return response
 }

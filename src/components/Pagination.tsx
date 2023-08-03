@@ -1,6 +1,10 @@
 "use client"
 
 import {
+    BiLeftArrowAlt,
+    BiRightArrowAlt
+} from 'react-icons/bi'
+import {
     Select,
     SelectContent,
     SelectGroup,
@@ -9,6 +13,12 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip"
 import { Button } from "./ui/button"
 import { Dispatch, SetStateAction } from "react"
 
@@ -19,12 +29,11 @@ type TPaginationProps = {
     setPageNumber: Dispatch<SetStateAction<number>>
     sortBy: string
     setSortBy: Dispatch<SetStateAction<string>>
-    totalPageCount: number
-    setTotalPageCount: Dispatch<SetStateAction<number>>
+    totalPages: number
 }
 
 export default function Pagination({
-    limit, setLimit, pageNumber, setPageNumber, sortBy, setSortBy, totalPageCount, setTotalPageCount
+    limit, setLimit, pageNumber, setPageNumber, sortBy, setSortBy, totalPages
 }: TPaginationProps) {
     return (
         <div className="w-full p-3 flex items-center justify-center px-2 border rounded-md hover:shadow-sm">
@@ -33,6 +42,7 @@ export default function Pagination({
                     <div className="flex items-center space-x-2">
                         <p className="text-sm font-medium">Rows per page</p>
                         <Select
+                            disabled={pageNumber === totalPages}
                             value={`${limit}`}
                             onValueChange={(value) => setLimit(parseInt(value))}
                         >
@@ -72,28 +82,40 @@ export default function Pagination({
                     </div>
                 </div>
                 <div className="flex items-center space-x-1">
-                    {
-                        Array.apply(null, Array(totalPageCount)).slice(0, 4).map((_, index) => {
-                            return (
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
                                 <Button
-                                    key={index}
-                                    className="h-8 w-8 bg-white border text-black hover:font-bold hover:bg-gray-100"
+                                    variant={"outline"}
+                                    disabled={pageNumber === 1}
+                                    className="text-slate-800 hover:text-black"
+                                    onClick={() => setPageNumber((old: number) => Math.max(old - 1, 0))}
                                 >
-                                    <span className="">{index + 1}</span>
+                                    <BiLeftArrowAlt size={"1.25rem"} />
                                 </Button>
-                            )
-                        })
-                    }
-                    {
-                        totalPageCount > 10 && (
-                            <>
-                                <span>...</span>
-                                <Button className="h-8 w-8 bg-white border text-black hover:font-bold hover:bg-gray-100">
-                                    <span className="">{totalPageCount}</span>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p className="p-2">Previous Page</p>
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button
+                                    variant={"outline"}
+                                    disabled={pageNumber === totalPages}
+                                    className="text-slate-800 hover:text-black"
+                                    onClick={() => setPageNumber((old: number) => Math.min(old + 1, totalPages))}
+                                >
+                                    <BiRightArrowAlt size={"1.25rem"} />
                                 </Button>
-                            </>
-                        )
-                    }
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p className="p-2">Next Page</p>
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
                 </div>
             </div>
         </div>

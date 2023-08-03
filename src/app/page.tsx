@@ -12,6 +12,8 @@ import { getQuestions } from "@/https";
 import { toast } from "@/components/ui/use-toast";
 import Loader from '@/components/Loader';
 import { useRouter } from 'next/navigation';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { get } from 'https';
 
 
 export type TPagination = {
@@ -23,53 +25,50 @@ export type TPagination = {
 export default function Home() {
 
   const router = useRouter()
+  const queryClient = useQueryClient()
 
   const [limit, setLimit] = useState<number>(10);
-  const [pageNumber, setPageNumber] = useState<number>(1);
   const [sortBy, setSortBy] = useState<string>("desc");
-  // const [search, setSearch] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(true);
-  const [questions, setQuestions] = useState<DBQuestions[]>([])
-  const [totalPageCount, setTotalPageCount] = useState<number>(0);
+  const [pageNumber, setPageNumber] = useState<number>(1);
 
+  const { status, data: response, error, isFetching, isPreviousData } = useQuery({
+    queryKey: ['questions', limit, pageNumber, sortBy],
+    queryFn: async () => await getQuestions(limit, pageNumber, sortBy, ""),
+    keepPreviousData: true,
+    staleTime: 5000,
+  })
+
+  // Prefetch the next page!
   useEffect(() => {
-    async function fetchQuestions() {
-      try {
-        setLoading(true)
-        const res = await getQuestions(limit, pageNumber, sortBy, "")
-        if (res.status === 200) {
-          const data = res.data.data
-          setQuestions(data.questions)
-          setTotalPageCount(data.totalPageCount)
-        } else if (res.status === 500) {
-          throw new Error()
-        }
-      } catch (error) {
-        toast({
-          variant: "destructive",
-          title: "Something went wrong",
-          description: "Please try again.",
-          duration: 3000
-        })
-      } finally {
-        setLoading(false)
-      }
+    if (!isPreviousData) {
+      queryClient.prefetchQuery({
+        queryKey: ['questions', limit, pageNumber, sortBy],
+        queryFn: async () => await getQuestions(limit, pageNumber, sortBy, ""),
+      })
     }
-    fetchQuestions()
-  }, [limit, pageNumber, sortBy])
+  }, [pageNumber, limit, sortBy, isPreviousData, queryClient])
+
+  if (error) {
+    toast({
+      variant: "destructive",
+      title: "Something went wrong",
+      description: "Please try again.",
+      duration: 3000
+    })
+  }
 
   return (
     <main className="h-screen w-screen flex flex-col">
       <Header />
       {
-        loading ? (
+        isFetching || status === "loading" ? (
           <div className="absolute z-20 top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]">
             <Loader />
           </div>
         ) : (
           <div className="container h-full py-1 overflow-y-scroll">
             {
-              questions.length === 0 && (
+              response?.data?.data?.questions.length === 0 && (
                 <div className="h-full flex gap-2 flex-col items-center justify-center">
                   <Image
                     src={"/stack-underflow.jpg"}
@@ -86,12 +85,12 @@ export default function Home() {
               )
             }
             {
-              questions.length != 0 && (
+              response?.data?.data?.questions.length != 0 && (
                 <div className="flex flex-col gap-2 items-center justify-center">
-                  <div className="Questions h-full w-4/5 flex flex-col gap-1">
+                  <div className="mb-20 Questions h-full w-4/5 flex flex-col gap-1">
                     <Accordion type="single" collapsible className="w-full flex flex-col gap-2">
                       {
-                        questions.length && questions.map((question: DBQuestions, index: number) => {
+                        response?.data?.data?.questions.map((question: DBQuestions, index: number) => {
                           return (
                             <Question key={index} question={question} />
                           )
@@ -99,7 +98,7 @@ export default function Home() {
                       }
                     </Accordion>
                   </div>
-                  <div className="w-4/5 mb-2">
+                  <div className="absolute bottom-0 mb-2 w-3/5">
                     <Pagination
                       limit={limit}
                       setLimit={setLimit}
@@ -107,8 +106,7 @@ export default function Home() {
                       setPageNumber={setPageNumber}
                       sortBy={sortBy}
                       setSortBy={setSortBy}
-                      totalPageCount={totalPageCount}
-                      setTotalPageCount={setTotalPageCount}
+                      totalPages={response?.data?.data?.totalPageCount}
                     />
                   </div>
                 </div>
