@@ -11,8 +11,16 @@ class QuestionService {
             },
             include: {
                 user: true,
-                answers: true,
-                comments: true
+                answers: {
+                    include: {
+                        user: true,
+                    }
+                },
+                comments: {
+                    include: {
+                        user: true
+                    }
+                }
             }
         })
     }

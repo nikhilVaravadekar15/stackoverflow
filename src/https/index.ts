@@ -11,9 +11,9 @@ export const axiosRequestConfig: AxiosRequestConfig = {
 }
 
 
-// List of all the endpoints
-export function postQuestion({ question, discription }: TQuestionBody) {
-    return axios.post(
+// questions
+export async function postQuestion({ question, discription }: TQuestionBody) {
+    const response = await axios.post(
         API_BASE_URL + "/api/question",
         {
             "question": question,
@@ -21,6 +21,7 @@ export function postQuestion({ question, discription }: TQuestionBody) {
         },
         axiosRequestConfig
     )
+    return response
 }
 
 export async function getQuestion(qid: string) {
@@ -28,7 +29,7 @@ export async function getQuestion(qid: string) {
         API_BASE_URL + `/api/question?qid=${qid}`,
         axiosRequestConfig
     )
-    return response.data
+    return response
 }
 
 export async function getQuestions(limit: number = 10, pageNumber: number = 1, sort: string = "desc", search: string = "") {
@@ -50,6 +51,20 @@ export async function getUserAskedQuestions(limit: number = 10, pageNumber: numb
 export async function getUserAnsweredQuestions(limit: number = 10, pageNumber: number = 1, sort: string = "desc", email: string) {
     const response = await axios.get(
         API_BASE_URL + `/api/question?limit=${limit}&pageNumber=${pageNumber}&sortBy=${sort}&email=${email}&answered=${true}`,
+        axiosRequestConfig
+    )
+    return response
+}
+
+// answers
+export async function postAnswer({ question: questionId, discription: answer }: TQuestionBody) {
+    console.log(questionId, answer)
+    const response = await axios.post(
+        API_BASE_URL + "/api/answer",
+        {
+            "question": questionId,
+            "discription": answer
+        },
         axiosRequestConfig
     )
     return response

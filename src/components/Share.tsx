@@ -26,7 +26,7 @@ export default function Share({ url }: { url: string }) {
                             type="url"
                             readOnly={true}
                             defaultValue={url}
-                            className="p-2 w-full border rounded pointer-events-none"
+                            className="p-2 w-full text-xs border rounded pointer-events-none"
                         />
                     </div>
                 </div>
