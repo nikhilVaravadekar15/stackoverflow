@@ -38,3 +38,19 @@ export async function getQuestions(limit: number = 10, pageNumber: number = 1, s
     )
     return response
 }
+
+export async function getUserAskedQuestions(limit: number = 10, pageNumber: number = 1, sort: string = "desc", email: string) {
+    const response = await axios.get(
+        API_BASE_URL + `/api/question?limit=${limit}&pageNumber=${pageNumber}&sortBy=${sort}&email=${email}`,
+        axiosRequestConfig
+    )
+    return response
+}
+
+export async function getUserAnsweredQuestions(limit: number = 10, pageNumber: number = 1, sort: string = "desc", email: string) {
+    const response = await axios.get(
+        API_BASE_URL + `/api/question?limit=${limit}&pageNumber=${pageNumber}&sortBy=${sort}&email=${email}&answered=${true}`,
+        axiosRequestConfig
+    )
+    return response
+}

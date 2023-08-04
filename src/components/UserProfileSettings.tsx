@@ -29,7 +29,7 @@ export default function UserProfileSettings({ name, email, image }: TUser) {
                 <div className="flex flex-col gap-2">
                     <Link
                         passHref={true}
-                        href="/question-asked"
+                        href="/question/u/asked"
                         className="w-full p-1.5 flex items-center justify-between border rounded-md hover:bg-slate-200 focus-within:text-gray-800"
                     >
                         <span className="text-sm">Question you asked</span>
@@ -37,7 +37,7 @@ export default function UserProfileSettings({ name, email, image }: TUser) {
                     </Link>
                     <Link
                         passHref={true}
-                        href="/question-asked"
+                        href="/question/u/answered"
                         className="w-full p-1.5 flex items-center justify-between border rounded-md hover:bg-slate-200"
                     >
                         <span className="text-sm">Question you answered</span>

@@ -14,6 +14,8 @@ export async function GET(request: Request, response: Response) {
     const limit: number = parseInt(url.searchParams.get("limit")!)!
     const pageNumber: number = parseInt(url.searchParams.get("pageNumber")!)!
     const sortBy: string = url.searchParams.get("sortBy")!
+    const email: string = url.searchParams.get("email")!
+    const answered: boolean = url.searchParams.get("answered")! === "true" ? true : false
     const search: string = url.searchParams.get("search")!
 
     try {
@@ -23,9 +25,27 @@ export async function GET(request: Request, response: Response) {
                 throw new Error()
             }
         } else {
-            [dbquestionsLength, dbquestions] = await questionService.getQuestions(limit, pageNumber, sortBy, search)
-            if (!dbquestions) {
-                throw new Error()
+            if (email) {
+                if (answered) {
+                    console.log("answered");
+                    [dbquestionsLength, dbquestions] = await questionService.getUserAnsweredQuestions(limit, pageNumber, sortBy, email)
+                } else {
+                    console.log("asked");
+                    [dbquestionsLength, dbquestions] = await questionService.getUserAskedQuestions(limit, pageNumber, sortBy, email)
+                }
+
+                if (!dbquestions) {
+                    throw new Error()
+                }
+
+            }
+            else {
+                [dbquestionsLength, dbquestions] = await questionService.getQuestions(limit, pageNumber, sortBy, search)
+                if (!dbquestions) {
+                    throw new Error()
+                }
+                console.log("get all");
+
             }
         }
     } catch (error: any) {

@@ -2,7 +2,7 @@
 "use client"
 
 import Image from 'next/image'
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Accordion } from "../components/ui/accordion"
 import Header from "@/components/Header";
 import Pagination from "@/components/Pagination";
@@ -11,20 +11,11 @@ import { Question as DBQuestions } from "@prisma/client";
 import { getQuestions } from "@/https";
 import { toast } from "@/components/ui/use-toast";
 import Loader from '@/components/Loader';
-import { useRouter } from 'next/navigation';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { get } from 'https';
 
-
-export type TPagination = {
-  limit: number
-  pageNumber: number
-  sortBy: string
-}
 
 export default function Home() {
 
-  const router = useRouter()
   const queryClient = useQueryClient()
 
   const [limit, setLimit] = useState<number>(10);
@@ -115,6 +106,6 @@ export default function Home() {
           </div>
         )
       }
-    </main >
+    </main>
   )
 }

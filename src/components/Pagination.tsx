@@ -36,7 +36,7 @@ export default function Pagination({
     limit, setLimit, pageNumber, setPageNumber, sortBy, setSortBy, totalPages
 }: TPaginationProps) {
     return (
-        <div className="w-full p-3 flex items-center justify-center px-2 border rounded-md hover:shadow-sm">
+        <div className="w-full p-3 flex items-center justify-center px-2 border rounded-md bg-white hover:shadow-sm">
             <div className="w-full flex items-center justify-between">
                 <div className="flex gap-2 items-center justify-center">
                     <div className="flex items-center space-x-2">

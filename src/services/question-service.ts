@@ -33,6 +33,70 @@ class QuestionService {
         ])
     }
 
+    async getUserAskedQuestions(limit: number = 10, pageNumber: number = 1, sort: string = "desc", email: string) {
+        return await db.$transaction([
+            db.question.count({
+                where: {
+                    user: {
+                        email: email
+                    }
+                }
+            }),
+            db.question.findMany({
+                where: {
+                    user: {
+                        email: email
+                    }
+                },
+                include: {
+                    user: true
+                },
+                skip: (pageNumber - 1) * limit,
+                take: limit,
+                orderBy: {
+                    asked: sort == "desc" ? "desc" : "asc"
+                }
+            })
+        ])
+    }
+
+    // # TODO: Fix this
+    // SELECT * FROM question LEFT JOIN answer ON question.user_id = user_id
+    async getUserAnsweredQuestions(limit: number = 10, pageNumber: number = 1, sort: string = "desc", email: string) {
+        return await db.$transaction([
+            db.question.count({
+                where: {
+                    answers: {
+                        every: {
+                            user: {
+                                email: email
+                            }
+                        }
+                    }
+                }
+            }),
+            db.question.findMany({
+                where: {
+                    answers: {
+                        every: {
+                            user: {
+                                email: email
+                            }
+                        }
+                    }
+                },
+                include: {
+                    user: true
+                },
+                skip: (pageNumber - 1) * limit,
+                take: limit,
+                orderBy: {
+                    asked: sort == "desc" ? "desc" : "asc"
+                }
+            })
+        ])
+    }
+
     async insert(question: string, discription: string, user: User) {
         return await db.question.create({
             data: {
