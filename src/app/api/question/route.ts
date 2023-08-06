@@ -131,7 +131,7 @@ export async function POST(request: Request, response: Response) {
     // 2. check all fields are present
     try {
         body = await request.json()
-        const { question, discription }: TQuestionBody = body
+        const { question, description }: TQuestionBody = body
         if (!question) {
             return new Response(
                 JSON.stringify(
@@ -145,7 +145,7 @@ export async function POST(request: Request, response: Response) {
             )
         }
         // 3. add question to database
-        dbquestion = await questionService.insert(question, discription, user!)
+        dbquestion = await questionService.insert(question, description, user!)
         if (!dbquestion) {
             throw new Error()
         }
@@ -229,7 +229,7 @@ export async function PUT(request: Request, response: Response) {
     // 2. check all fields are present
     try {
         body = await request.json()
-        const { qid, question, discription }: TEditQuestion = body
+        const { qid, question, description }: TEditQuestion = body
         if (!qid || !question) {
             return new Response(
                 JSON.stringify(
@@ -243,7 +243,7 @@ export async function PUT(request: Request, response: Response) {
             )
         }
         // 3. add question to database
-        dbquestion = await questionService.update({ qid, question, discription })
+        dbquestion = await questionService.update({ qid, question, description })
         if (!dbquestion) {
             throw new Error()
         }

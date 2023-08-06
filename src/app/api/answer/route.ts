@@ -57,8 +57,8 @@ export async function POST(request: Request, response: Response) {
     // 2. check all fields are present
     try {
         body = await request.json()
-        const { question: questionId, discription }: TQuestionBody = body
-        if (!questionId && !discription) {
+        const { question: questionId, description }: TQuestionBody = body
+        if (!questionId && !description) {
             return new Response(
                 JSON.stringify(
                     {
@@ -71,7 +71,7 @@ export async function POST(request: Request, response: Response) {
             )
         }
         // 3. add question to database
-        dbAnswer = await answerService.insertAnswer(user.id!, questionId!, discription!)
+        dbAnswer = await answerService.insertAnswer(user.id!, questionId!, description!)
         if (!dbAnswer) {
             throw new Error()
         }
@@ -156,8 +156,8 @@ export async function PUT(request: Request, response: Response) {
     // 2. check all fields are present
     try {
         body = await request.json()
-        const { qid: answerId, discription: updatedDiscription }: TEditAnswer = body
-        if (!answerId && !updatedDiscription) {
+        const { qid: answerId, description: updateddescription }: TEditAnswer = body
+        if (!answerId && !updateddescription) {
             return new Response(
                 JSON.stringify(
                     {
@@ -170,7 +170,7 @@ export async function PUT(request: Request, response: Response) {
             )
         }
         // 3. add question to database
-        dbAnswer = await answerService.updateAnswer(answerId, updatedDiscription)
+        dbAnswer = await answerService.updateAnswer(answerId, updateddescription)
         if (!dbAnswer) {
             throw new Error()
         }

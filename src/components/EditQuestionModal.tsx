@@ -18,14 +18,14 @@ import { TEditQuestion } from '@/types/types'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 
-export default function EditQuestionModal({ qid, question: title, discription: description }: TEditQuestion) {
+export default function EditQuestionModal({ qid, question: title, description: description }: TEditQuestion) {
 
     const queryClient = useQueryClient();
     const [editableTitle, setEditableTitle] = useState<string>(title)
     const [editableDescription, setEditableDescription] = useState<string>(description)
 
     const { isLoading, isError, data: response, mutate } = useMutation({
-        mutationFn: async ({ qid, question, discription }: TEditQuestion) => await updateQuestion({ qid, question, discription }),
+        mutationFn: async ({ qid, question, description }: TEditQuestion) => await updateQuestion({ qid, question, description }),
         onSuccess: () => {
             queryClient.invalidateQueries(["question"])
             toast({
@@ -48,7 +48,7 @@ export default function EditQuestionModal({ qid, question: title, discription: d
         mutate({
             qid: qid,
             question: editableTitle,
-            discription: editableDescription
+            description: editableDescription
         })
     }
 

@@ -106,24 +106,24 @@ class QuestionService {
         ])
     }
 
-    async update({ qid, question, discription }: TEditQuestion) {
+    async update({ qid, question, description }: TEditQuestion) {
         return await db.question.update({
             where: {
                 id: qid
             },
             data: {
                 title: question,
-                description: discription,
+                description: description,
                 modified: new Date()
             }
         })
     }
 
-    async insert(question: string, discription: string, user: User) {
+    async insert(question: string, description: string, user: User) {
         return await db.question.create({
             data: {
                 title: question,
-                description: discription,
+                description: description,
                 user: {
                     connect: {
                         email: user.email!

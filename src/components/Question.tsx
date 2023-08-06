@@ -15,7 +15,10 @@ export default function Question({ question }: { question: Question }) {
 
     return (
         <AccordionItem value={`${question.id}`}>
-            <AccordionTrigger className="px-4 w-full flex gap-3 border rounded-md data-[state=open]:shadow-lg">
+            <AccordionTrigger
+                disabled={question.description ? false : true}
+                className="px-4 w-full flex gap-3 border rounded-md data-[state=open]:shadow-lg"
+            >
                 <div className="w-[12%] flex flex-col gap-1 items-end">
                     <span className="text-base text-slate-600">0 votes</span>
                     <span className="text-base text-slate-600">0 answers</span>
@@ -36,9 +39,13 @@ export default function Question({ question }: { question: Question }) {
                     </div>
                 </div>
             </AccordionTrigger>
-            <AccordionContent className="w-full border rounded-md">
-                <Preview value={question.description!} />
-            </AccordionContent>
+            {
+                question.description! && (
+                    <AccordionContent className="w-full border rounded-md">
+                        <Preview value={question.description!} />
+                    </AccordionContent>
+                )
+            }
         </AccordionItem>
     )
 }

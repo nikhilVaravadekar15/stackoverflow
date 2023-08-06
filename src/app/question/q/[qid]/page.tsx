@@ -48,8 +48,8 @@ export default function QuestionPage({ params }: { params: { qid: string } }) {
         queryFn: async () => await getQuestion(params.qid)
     })
 
-    const { isLoading: ismutationCommentLoading, isError: ismutationCommentError, mutate: mutateComment, data: mutateCommentResponse } = useMutation({
-        mutationFn: async ({ question, discription }: TQuestionBody) => await postAnswer({ question, discription }),
+    const { isLoading: postAnswerIsLoading, isError: postAnswerIsError, mutate: mutateComment, data: postAnswerResponse } = useMutation({
+        mutationFn: async ({ question, description }: TQuestionBody) => await postAnswer({ question, description }),
         onSuccess: () => {
             queryClient.invalidateQueries(["question"]);
         }
@@ -73,14 +73,12 @@ export default function QuestionPage({ params }: { params: { qid: string } }) {
             } else {
                 mutateComment({
                     question: params.qid,
-                    discription: customAnswer
+                    description: customAnswer
                 })
                 setCustomAnswer("");
             }
         }
     }
-
-    console.log(response?.data?.data)
 
     return (
         <main className="h-screen w-screen flex flex-col">
@@ -132,7 +130,7 @@ export default function QuestionPage({ params }: { params: { qid: string } }) {
                                                     <EditQuestionModal
                                                         qid={response?.data?.data?.id}
                                                         question={response?.data?.data?.title}
-                                                        discription={response?.data?.data?.description}
+                                                        description={response?.data?.data?.description! ? response?.data?.data?.description! : ""}
                                                     />
                                                 </>
                                             )
@@ -147,13 +145,23 @@ export default function QuestionPage({ params }: { params: { qid: string } }) {
                                             downvotes={response?.data?.data?.downvotes!}
                                         />
                                         <div className="w-full flex flex-col gap-4">
-                                            <Preview value={response?.data?.data?.description!} />
+                                            {
+                                                response?.data?.data?.description! && (
+                                                    <Preview value={response?.data?.data?.description!} />
+                                                )
+                                            }
                                             {/* <Comments /> */}
                                         </div>
                                     </div>
                                     <hr />
                                     <div className="w-full flex flex-col gap-4 mb-8">
-                                        <Answers answers={response?.data?.data?.answers!} />
+                                        {
+                                            postAnswerIsLoading ? (
+                                                <Loader />
+                                            ) : (
+                                                <Answers answers={response?.data?.data?.answers!} />
+                                            )
+                                        }
                                         <div className="flex flex-col gap-3">
                                             <div className="flex items-center justify-between">
                                                 <h1 className="text-xl font-semibold text-slate-700 cursor-pointer">
@@ -225,7 +233,6 @@ function Answers(props: { answers: Answer[] }) {
                         <div className="flex flex-col gap-12">
                             {
                                 props.answers?.map((answer: Answer, index: number) => {
-                                    console.log(answer)
                                     return (
                                         <div className="flex gap-2" key={index}>
                                             <Votes
@@ -233,7 +240,11 @@ function Answers(props: { answers: Answer[] }) {
                                                 downvotes={answer.downvotes!}
                                             />
                                             <div className="w-full flex flex-col gap-4">
-                                                <Preview value={answer.description!} />
+                                                {
+                                                    answer.description! && (
+                                                        <Preview value={answer.description!} />
+                                                    )
+                                                }
                                                 <div className="flex flex-col">
                                                     <div className="flex gap-8 items-center">
                                                         <div className="flex gap-1 items-center">
@@ -262,7 +273,7 @@ function Answers(props: { answers: Answer[] }) {
                                                                 <>
                                                                     <EditAnswerModal
                                                                         qid={answer.id!}
-                                                                        discription={answer.description!}
+                                                                        description={answer.description! ? answer.description! : ""}
                                                                     />
                                                                 </>
                                                             )

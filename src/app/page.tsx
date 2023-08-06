@@ -82,6 +82,7 @@ export default function Home() {
                     <Accordion type="single" collapsible className="w-full flex flex-col gap-2">
                       {
                         response?.data?.data?.questions.map((question: DBQuestions, index: number) => {
+                          console.log(question)
                           return (
                             <Question key={index} question={question} />
                           )

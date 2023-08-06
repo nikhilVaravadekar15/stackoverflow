@@ -7,12 +7,12 @@ export type TUser = {
 
 export type TQuestionBody = {
     question: string,
-    discription: string
+    description: string
 }
 
 export type TEditAnswer = {
     qid: string
-    discription: string
+    description: string
 }
 
 export type TEditQuestion = {

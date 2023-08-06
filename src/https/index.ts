@@ -20,25 +20,25 @@ export async function getQuestion(qid: string) {
     return response
 }
 
-export async function postQuestion({ question, discription }: TQuestionBody) {
+export async function postQuestion({ question, description }: TQuestionBody) {
     const response = await axios.post(
         API_BASE_URL + "/api/question",
         {
             "question": question,
-            "discription": discription
+            "description": description
         },
         axiosRequestConfig
     )
     return response
 }
 
-export async function updateQuestion({ qid, question, discription }: TEditQuestion) {
+export async function updateQuestion({ qid, question, description }: TEditQuestion) {
     const response = await axios.put(
         API_BASE_URL + `/api/question`,
         {
             "qid": qid,
             "question": question,
-            "discription": discription
+            "description": description
         },
         axiosRequestConfig
     )
@@ -70,25 +70,24 @@ export async function getUserAnsweredQuestions(limit: number = 10, pageNumber: n
 }
 
 // answers
-export async function postAnswer({ question: questionId, discription: answer }: TQuestionBody) {
-    console.log(questionId, answer)
+export async function postAnswer({ question: questionId, description: answer }: TQuestionBody) {
     const response = await axios.post(
         API_BASE_URL + "/api/answer",
         {
             "question": questionId,
-            "discription": answer
+            "description": answer
         },
         axiosRequestConfig
     )
     return response
 }
 
-export async function updateAnswer({ qid, discription: answer }: TEditAnswer) {
+export async function updateAnswer({ qid, description: answer }: TEditAnswer) {
     const response = await axios.put(
         API_BASE_URL + `/api/answer`,
         {
             "qid": qid,
-            "discription": answer
+            "description": answer
         },
         axiosRequestConfig
     )

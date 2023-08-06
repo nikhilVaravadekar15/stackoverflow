@@ -22,10 +22,10 @@ export default function AskaQuestion() {
     const queryClient = useQueryClient();
     const { data: session, status } = useSession()
     const [question, setQuestion] = useState<string>("");
-    const [discription, setDiscription] = useState<string>("");
+    const [description, setDescription] = useState<string>("");
 
     const { isLoading, isError, data: response, mutate } = useMutation({
-        mutationFn: async ({ question, discription }: TQuestionBody) => await postQuestion({ question, discription }),
+        mutationFn: async ({ question, description }: TQuestionBody) => await postQuestion({ question, description }),
     })
 
     function handleSession() {
@@ -57,7 +57,7 @@ export default function AskaQuestion() {
             } else {
                 mutate({
                     question,
-                    discription
+                    description
                 })
             }
         }
@@ -73,7 +73,7 @@ export default function AskaQuestion() {
     }
 
     if (response?.status === 201 && response?.data.status === true) {
-        router.push("/question/asked")
+        router.push("/question/u/asked")
     }
 
     return (
@@ -109,7 +109,7 @@ export default function AskaQuestion() {
                     </Button>
                 </div>
                 <div className="h-[90%] w-full">
-                    <Editor content={discription} setContent={setDiscription} />
+                    <Editor content={description} setContent={setDescription} />
                 </div>
             </div >
         </main >

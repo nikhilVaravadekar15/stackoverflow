@@ -36,8 +36,8 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 # TODO: 
 1. votes question
 2. votes answer
-3. description (fix typo)
-4. toast (utility)
-5. check if question answered??
-6. search
-7. question you answered (prisma query)
+1. delete question
+2. delete answer
+3. check if question answered??
+4. search
+5. question you answered (prisma query)
