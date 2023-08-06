@@ -1,5 +1,5 @@
-import { TQuestionBody } from '@/types/types';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import { TQuestionBody, TEditQuestion, TEditAnswer } from '@/types/types';
 
 export const API_BASE_URL: string = process.env.NEXT_PUBLIC_BASE_URL!
 export const axiosRequestConfig: AxiosRequestConfig = {
@@ -12,6 +12,14 @@ export const axiosRequestConfig: AxiosRequestConfig = {
 
 
 // questions
+export async function getQuestion(qid: string) {
+    const response = await axios.get(
+        API_BASE_URL + `/api/question?qid=${qid}`,
+        axiosRequestConfig
+    )
+    return response
+}
+
 export async function postQuestion({ question, discription }: TQuestionBody) {
     const response = await axios.post(
         API_BASE_URL + "/api/question",
@@ -24,9 +32,14 @@ export async function postQuestion({ question, discription }: TQuestionBody) {
     return response
 }
 
-export async function getQuestion(qid: string) {
-    const response = await axios.get(
-        API_BASE_URL + `/api/question?qid=${qid}`,
+export async function updateQuestion({ qid, question, discription }: TEditQuestion) {
+    const response = await axios.put(
+        API_BASE_URL + `/api/question`,
+        {
+            "qid": qid,
+            "question": question,
+            "discription": discription
+        },
         axiosRequestConfig
     )
     return response
@@ -63,6 +76,18 @@ export async function postAnswer({ question: questionId, discription: answer }: 
         API_BASE_URL + "/api/answer",
         {
             "question": questionId,
+            "discription": answer
+        },
+        axiosRequestConfig
+    )
+    return response
+}
+
+export async function updateAnswer({ qid, discription: answer }: TEditAnswer) {
+    const response = await axios.put(
+        API_BASE_URL + `/api/answer`,
+        {
+            "qid": qid,
             "discription": answer
         },
         axiosRequestConfig

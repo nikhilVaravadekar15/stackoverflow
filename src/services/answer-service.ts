@@ -23,6 +23,19 @@ class AnswerService {
 
     }
 
+    async updateAnswer(answerId: string, updateAnswer: string) {
+        return await db.answer.update({
+            where: {
+                id: answerId
+            },
+            data: {
+                description: updateAnswer,
+                modified: new Date()
+            }
+        })
+
+    }
+
 }
 
 export default new AnswerService()

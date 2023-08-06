@@ -1,5 +1,6 @@
 /* eslint-disable import/no-anonymous-default-export */
 import { db } from "@/lib/db";
+import { TEditQuestion } from "@/types/types";
 import { User } from "@prisma/client";
 
 class QuestionService {
@@ -103,6 +104,19 @@ class QuestionService {
                 }
             })
         ])
+    }
+
+    async update({ qid, question, discription }: TEditQuestion) {
+        return await db.question.update({
+            where: {
+                id: qid
+            },
+            data: {
+                title: question,
+                description: discription,
+                modified: new Date()
+            }
+        })
     }
 
     async insert(question: string, discription: string, user: User) {

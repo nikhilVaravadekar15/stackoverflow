@@ -17,8 +17,8 @@ import Preview from '@/components/Preview'
 import Share from '@/components/Share'
 import Comments from '@/components/Comments'
 import UserAvatar from '@/components/UserAvatar'
-import { notFound, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation';
+import { useState } from 'react'
 import { getQuestion, postAnswer } from '@/https'
 import Loader from '@/components/Loader'
 import { toast } from '@/components/ui/use-toast'
@@ -32,7 +32,8 @@ import Error from '@/components/Error'
 import { TQuestionBody } from '@/types/types'
 import { useSession } from 'next-auth/react'
 import { Answer } from '@prisma/client'
-import Link from 'next/link'
+import EditQuestionModal from '@/components/EditQuestionModal'
+import EditAnswerModal from '@/components/EditAnswerModal'
 
 
 export default function QuestionPage({ params }: { params: { qid: string } }) {
@@ -79,6 +80,8 @@ export default function QuestionPage({ params }: { params: { qid: string } }) {
         }
     }
 
+    console.log(response?.data?.data)
+
     return (
         <main className="h-screen w-screen flex flex-col">
             <Header />
@@ -108,7 +111,7 @@ export default function QuestionPage({ params }: { params: { qid: string } }) {
                                             </span>
                                         </div>
                                         {
-                                            response?.data?.modified?.toDateString() && (
+                                            response?.data?.data?.modified?.toString() && (
                                                 <div className="flex gap-1 items-center">
                                                     <span className="text-sm text-slate-700">Modified</span>
                                                     <span className="text-base text-slate-800">
@@ -126,13 +129,11 @@ export default function QuestionPage({ params }: { params: { qid: string } }) {
                                         {
                                             sessionStatus === "authenticated" && sessionData.user.email === response?.data?.data?.user!.email && (
                                                 <>
-                                                    <Link
-                                                        passHref={true}
-                                                        href={`/question/edit/${response?.data?.data?.id}`}
-                                                        className="border-blue-500 hover:text-blue-500 hover:border-b-2"
-                                                    >
-                                                        Edit question
-                                                    </Link>
+                                                    <EditQuestionModal
+                                                        qid={response?.data?.data?.id}
+                                                        question={response?.data?.data?.title}
+                                                        discription={response?.data?.data?.description}
+                                                    />
                                                 </>
                                             )
                                         }
@@ -224,6 +225,7 @@ function Answers(props: { answers: Answer[] }) {
                         <div className="flex flex-col gap-12">
                             {
                                 props.answers?.map((answer: Answer, index: number) => {
+                                    console.log(answer)
                                     return (
                                         <div className="flex gap-2" key={index}>
                                             <Votes
@@ -241,7 +243,7 @@ function Answers(props: { answers: Answer[] }) {
                                                             </span>
                                                         </div>
                                                         {
-                                                            answer?.modified?.toDateString() && (
+                                                            answer?.modified?.toString() && (
                                                                 <div className="flex gap-1 items-center">
                                                                     <span className="text-sm text-slate-700">Modified</span>
                                                                     <span className="text-base text-slate-800">
@@ -258,13 +260,10 @@ function Answers(props: { answers: Answer[] }) {
                                                         {
                                                             sessionStatus === "authenticated" && sessionData.user.email === answer?.user!.email && (
                                                                 <>
-                                                                    <Link
-                                                                        passHref={true}
-                                                                        href={`/question/edit/${answer.id!}`}
-                                                                        className="border-blue-500 hover:text-blue-500 hover:border-b-2"
-                                                                    >
-                                                                        Edit answer
-                                                                    </Link>
+                                                                    <EditAnswerModal
+                                                                        qid={answer.id!}
+                                                                        discription={answer.description!}
+                                                                    />
                                                                 </>
                                                             )
                                                         }
