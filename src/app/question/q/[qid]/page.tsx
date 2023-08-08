@@ -141,6 +141,8 @@ export default function QuestionPage({ params }: { params: { qid: string } }) {
                                 <div className="flex flex-col gap-12">
                                     <div className="w-full flex gap-2">
                                         <Votes
+                                            id={response?.data?.data?.id}
+                                            type={"question"}
                                             upvotes={response?.data?.data?.upvotes!}
                                             downvotes={response?.data?.data?.downvotes!}
                                         />
@@ -236,6 +238,8 @@ function Answers(props: { answers: Answer[] }) {
                                     return (
                                         <div className="flex gap-2" key={index}>
                                             <Votes
+                                                id={answer.id!}
+                                                type={"answer"}
                                                 upvotes={answer.upvotes!}
                                                 downvotes={answer.downvotes!}
                                             />

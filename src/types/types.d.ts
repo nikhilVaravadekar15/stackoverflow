@@ -18,3 +18,9 @@ export type TEditAnswer = {
 export type TEditQuestion = {
     qid: string
 } & TQuestionBody
+
+export type TVotes = {
+    id: string
+    upvotes: number
+    downvotes: number
+}

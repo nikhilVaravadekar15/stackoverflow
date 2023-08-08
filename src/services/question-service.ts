@@ -1,6 +1,6 @@
 /* eslint-disable import/no-anonymous-default-export */
 import { db } from "@/lib/db";
-import { TEditQuestion } from "@/types/types";
+import { TEditQuestion, TVotes } from "@/types/types";
 import { User } from "@prisma/client";
 
 class QuestionService {
@@ -137,6 +137,18 @@ class QuestionService {
         return await db.question.delete({
             where: {
                 id: id
+            }
+        })
+    }
+
+    async updateVotes({ id, upvotes, downvotes }: TVotes) {
+        return await db.question.update({
+            where: {
+                id: id
+            },
+            data: {
+                upvotes: upvotes,
+                downvotes: downvotes
             }
         })
     }

@@ -10,3 +10,9 @@ export default function Loader() {
         </div>
     )
 }
+
+export function LoadingSpinner() {
+    return (
+        <div className="spin"></div>
+    )
+}

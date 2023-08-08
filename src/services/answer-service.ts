@@ -1,6 +1,7 @@
 /* eslint-disable import/no-anonymous-default-export */
 
 import { db } from "@/lib/db"
+import { TVotes } from "@/types/types"
 
 class AnswerService {
 
@@ -33,7 +34,18 @@ class AnswerService {
                 modified: new Date()
             }
         })
+    }
 
+    async updateVotes({ id, upvotes, downvotes }: TVotes) {
+        return await db.answer.update({
+            where: {
+                id: id
+            },
+            data: {
+                upvotes: upvotes,
+                downvotes: downvotes
+            }
+        })
     }
 
 }
