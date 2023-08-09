@@ -24,3 +24,8 @@ export type TVotes = {
     upvotes: number
     downvotes: number
 }
+
+export type TAcceptedAnswer = {
+    id: string
+    acceptedAnswer: boolean
+}

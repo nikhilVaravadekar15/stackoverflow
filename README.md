@@ -34,10 +34,7 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
 # TODO: 
-1. votes question
-2. votes answer
 1. delete question
 2. delete answer
-3. check if question answered??
-4. search
-5. question you answered (prisma query)
+3. search
+4. question you answered (prisma query)

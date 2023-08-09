@@ -12,6 +12,10 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip"
+import {
+    ImCheckboxChecked,
+    ImCheckboxUnchecked
+} from 'react-icons/im'
 import Header from '@/components/Header'
 import Preview from '@/components/Preview'
 import Share from '@/components/Share'
@@ -19,8 +23,8 @@ import Comments from '@/components/Comments'
 import UserAvatar from '@/components/UserAvatar'
 import { useRouter } from 'next/navigation';
 import { useState } from 'react'
-import { getQuestion, postAnswer } from '@/https'
-import Loader from '@/components/Loader'
+import { getQuestion, postAnswer, updateAcceptedAnswer } from '@/https'
+import Loader, { LoadingSpinner } from '@/components/Loader'
 import { toast } from '@/components/ui/use-toast'
 import { months } from '@/data'
 import Votes from '@/components/Votes'
@@ -29,7 +33,7 @@ import Editor from '@/components/Editor'
 import { Button } from '@/components/ui/button'
 import { BiRightArrowAlt } from 'react-icons/bi'
 import Error from '@/components/Error'
-import { TQuestionBody } from '@/types/types'
+import { TAcceptedAnswer, TQuestionBody, TUser } from '@/types/types'
 import { useSession } from 'next-auth/react'
 import { Answer } from '@prisma/client'
 import EditQuestionModal from '@/components/EditQuestionModal'
@@ -161,7 +165,10 @@ export default function QuestionPage({ params }: { params: { qid: string } }) {
                                             postAnswerIsLoading ? (
                                                 <Loader />
                                             ) : (
-                                                <Answers answers={response?.data?.data?.answers!} />
+                                                <Answers
+                                                    user={response?.data?.data?.user!}
+                                                    answers={response?.data?.data?.answers!}
+                                                />
                                             )
                                         }
                                         <div className="flex flex-col gap-3">
@@ -208,8 +215,27 @@ export default function QuestionPage({ params }: { params: { qid: string } }) {
     )
 }
 
-function Answers(props: { answers: Answer[] }) {
+function Answers(props: { user: TUser, answers: Answer[] }) {
+    const queryClient = useQueryClient();
     const { data: sessionData, status: sessionStatus } = useSession()
+
+    const { isLoading, isError, mutate, data: response } = useMutation({
+        mutationFn: async ({ id, acceptedAnswer }: TAcceptedAnswer) => {
+            return await updateAcceptedAnswer({ id, acceptedAnswer })
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries(["question"])
+        }
+    })
+
+    if (isError) {
+        toast({
+            variant: "destructive",
+            title: "Something went wrong",
+            description: "Unable to mark as answered, please try again.",
+            duration: 3000
+        })
+    }
 
     return (
         <>
@@ -237,12 +263,63 @@ function Answers(props: { answers: Answer[] }) {
                                 props.answers?.map((answer: Answer, index: number) => {
                                     return (
                                         <div className="flex gap-2" key={index}>
-                                            <Votes
-                                                id={answer.id!}
-                                                type={"answer"}
-                                                upvotes={answer.upvotes!}
-                                                downvotes={answer.downvotes!}
-                                            />
+                                            <div className="flex gap-8 flex-col items-center">
+                                                <Votes
+                                                    id={answer.id!}
+                                                    type={"answer"}
+                                                    upvotes={answer.upvotes!}
+                                                    downvotes={answer.downvotes!}
+                                                />
+                                                {
+                                                    sessionStatus === "authenticated" && sessionData.user.email === props.user!.email && (
+                                                        isLoading ? (
+                                                            <LoadingSpinner />
+                                                        ) : (
+                                                            <TooltipProvider>
+                                                                <Tooltip>
+                                                                    <TooltipTrigger>
+                                                                        {
+                                                                            answer.acceptedAnswer ? (
+                                                                                <ImCheckboxChecked
+                                                                                    size={"1.25rem"}
+                                                                                    onClick={() => {
+                                                                                        mutate({
+                                                                                            id: answer.id!,
+                                                                                            acceptedAnswer: false
+                                                                                        })
+                                                                                    }}
+                                                                                    className="text-green-500 cursor-pointer"
+                                                                                />
+                                                                            ) : (
+                                                                                <ImCheckboxUnchecked
+                                                                                    size={"1.25rem"}
+                                                                                    onClick={() => {
+                                                                                        mutate({
+                                                                                            id: answer.id!,
+                                                                                            acceptedAnswer: true
+                                                                                        })
+                                                                                    }}
+                                                                                    className="cursor-pointer"
+                                                                                />
+                                                                            )
+                                                                        }
+                                                                    </TooltipTrigger>
+                                                                    <TooltipContent>
+                                                                        {
+                                                                            answer.acceptedAnswer ? (
+                                                                                <p className="p-2">Answered</p>
+                                                                            ) : (
+                                                                                <p className="p-2">Does answer to this question is correct?</p>
+                                                                            )
+                                                                        }
+                                                                    </TooltipContent>
+                                                                </Tooltip>
+                                                            </TooltipProvider>
+                                                        )
+
+                                                    )
+                                                }
+                                            </div>
                                             <div className="w-full flex flex-col gap-4">
                                                 {
                                                     answer.description! && (
@@ -291,7 +368,7 @@ function Answers(props: { answers: Answer[] }) {
                                 })
                             }
                         </div>
-                    </div>
+                    </div >
                 )
             }
         </>

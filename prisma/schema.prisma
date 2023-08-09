@@ -77,12 +77,13 @@ model Question {
 }
 
 model Answer {
-  id          String    @id @default(cuid())
-  description String?   @db.LongText
-  upvotes     Int       @default(0)
-  downvotes   Int       @default(0)
-  asked       DateTime  @default(now())
-  modified    DateTime?
+  id             String    @id @default(cuid())
+  description    String?   @db.LongText
+  upvotes        Int       @default(0)
+  downvotes      Int       @default(0)
+  asked          DateTime  @default(now())
+  modified       DateTime?
+  acceptedAnswer Boolean   @default(false)
 
   userId     String
   user       User      @relation(fields: [userId], references: [id])

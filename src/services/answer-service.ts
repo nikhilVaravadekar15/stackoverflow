@@ -1,7 +1,7 @@
 /* eslint-disable import/no-anonymous-default-export */
 
 import { db } from "@/lib/db"
-import { TVotes } from "@/types/types"
+import { TAcceptedAnswer, TVotes } from "@/types/types"
 
 class AnswerService {
 
@@ -44,6 +44,17 @@ class AnswerService {
             data: {
                 upvotes: upvotes,
                 downvotes: downvotes
+            }
+        })
+    }
+
+    async updateAcceptedAnswer({ id, acceptedAnswer }: TAcceptedAnswer) {
+        return await db.answer.update({
+            where: {
+                id: id
+            },
+            data: {
+                acceptedAnswer: acceptedAnswer
             }
         })
     }

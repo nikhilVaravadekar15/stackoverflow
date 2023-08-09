@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { TQuestionBody, TEditQuestion, TEditAnswer, TVotes } from '@/types/types';
+import { TQuestionBody, TEditQuestion, TEditAnswer, TVotes, TAcceptedAnswer } from '@/types/types';
 
 export const API_BASE_URL: string = process.env.NEXT_PUBLIC_BASE_URL!
 export const axiosRequestConfig: AxiosRequestConfig = {
@@ -88,6 +88,18 @@ export async function updateAnswer({ qid, description: answer }: TEditAnswer) {
         {
             "qid": qid,
             "description": answer
+        },
+        axiosRequestConfig
+    )
+    return response
+}
+
+export async function updateAcceptedAnswer({ id, acceptedAnswer }: TAcceptedAnswer) {
+    const response = await axios.put(
+        API_BASE_URL + `/api/answer/accepted`,
+        {
+            "id": id,
+            "acceptedAnswer": acceptedAnswer
         },
         axiosRequestConfig
     )

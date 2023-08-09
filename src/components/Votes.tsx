@@ -15,6 +15,7 @@ import { toast } from './ui/use-toast'
 import { TVotes } from '@/types/types'
 import { updateAnswer, updateAnswerVote, updateQuestionVote } from '@/https'
 import { LoadingSpinner } from './Loader'
+import { useSession } from 'next-auth/react'
 
 type TVotesProps = {
     type: "question" | "answer"
@@ -23,6 +24,7 @@ type TVotesProps = {
 export default function Votes({ id, type, upvotes, downvotes }: TVotesProps) {
 
     const queryClient = useQueryClient()
+    const { data: sessionData, status: sessionStatus } = useSession()
 
     const { isLoading, isError, mutate, data: response } = useMutation({
         mutationFn: async ({ id, type, upvotes, downvotes }: TVotesProps) => {
@@ -62,8 +64,18 @@ export default function Votes({ id, type, upvotes, downvotes }: TVotesProps) {
                             variant="outline"
                             className="rounded-full hover:bg-orange-50"
                             onClick={() => {
-                                let ups: number = upvotes + 1
-                                mutate({ id, type, upvotes: ups, downvotes })
+                                if (sessionStatus === "unauthenticated") {
+                                    toast({
+                                        variant: "destructive",
+                                        title: "Please login",
+                                        description: "You need to be logged in to upvote",
+                                        duration: 3000
+                                    })
+                                    return;
+                                } else {
+                                    let ups: number = upvotes + 1
+                                    mutate({ id, type, upvotes: ups, downvotes })
+                                }
                             }}
                         >
                             <BiSolidUpArrow size={"1.25rem"} />
@@ -96,9 +108,20 @@ export default function Votes({ id, type, upvotes, downvotes }: TVotesProps) {
                             variant="outline"
                             className="rounded-full hover:bg-orange-50"
                             onClick={() => {
-                                let downs: number = downvotes + 1
-                                mutate({ id, type, upvotes, downvotes: downs })
-                            }}
+                                if (sessionStatus === "unauthenticated") {
+                                    toast({
+                                        variant: "destructive",
+                                        title: "Please login",
+                                        description: "You need to be logged in to downvote",
+                                        duration: 3000
+                                    })
+                                    return;
+                                } else {
+                                    let downs: number = downvotes + 1
+                                    mutate({ id, type, upvotes, downvotes: downs })
+                                }
+                            }
+                            }
                         >
                             <BiSolidDownArrow size={"1.25rem"} />
                         </Button>
