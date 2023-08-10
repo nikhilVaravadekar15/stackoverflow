@@ -38,6 +38,7 @@ import { useSession } from 'next-auth/react'
 import { Answer } from '@prisma/client'
 import EditQuestionModal from '@/components/EditQuestionModal'
 import EditAnswerModal from '@/components/EditAnswerModal'
+import DeleteDialog from '@/components/DeleteDialog'
 
 
 export default function QuestionPage({ params }: { params: { qid: string } }) {
@@ -136,6 +137,25 @@ export default function QuestionPage({ params }: { params: { qid: string } }) {
                                                         question={response?.data?.data?.title}
                                                         description={response?.data?.data?.description! ? response?.data?.data?.description! : ""}
                                                     />
+                                                </>
+                                            )
+                                        }
+                                        {
+                                            sessionStatus === "authenticated" && sessionData.user.email === response?.data?.data?.user!.email && (
+                                                <>
+                                                    <TooltipProvider>
+                                                        <Tooltip>
+                                                            <TooltipTrigger>
+                                                                <DeleteDialog
+                                                                    type="question"
+                                                                    id={response?.data?.data?.id}
+                                                                />
+                                                            </TooltipTrigger>
+                                                            <TooltipContent>
+                                                                <p className="p-2 text-red-500">Delete this question</p>
+                                                            </TooltipContent>
+                                                        </Tooltip>
+                                                    </TooltipProvider>
                                                 </>
                                             )
                                         }
@@ -356,6 +376,25 @@ function Answers(props: { user: TUser, answers: Answer[] }) {
                                                                         qid={answer.id!}
                                                                         description={answer.description! ? answer.description! : ""}
                                                                     />
+                                                                </>
+                                                            )
+                                                        }
+                                                        {
+                                                            sessionStatus === "authenticated" && sessionData.user.email === answer?.user!.email && (
+                                                                <>
+                                                                    <TooltipProvider>
+                                                                        <Tooltip>
+                                                                            <TooltipTrigger>
+                                                                                <DeleteDialog
+                                                                                    type="answer"
+                                                                                    id={answer.id!}
+                                                                                />
+                                                                            </TooltipTrigger>
+                                                                            <TooltipContent>
+                                                                                <p className="p-2 text-red-500">Delete this answer</p>
+                                                                            </TooltipContent>
+                                                                        </Tooltip>
+                                                                    </TooltipProvider>
                                                                 </>
                                                             )
                                                         }

@@ -36,6 +36,14 @@ class AnswerService {
         })
     }
 
+    async deleteAnswer(id: string) {
+        return await db.answer.delete({
+            where: {
+                id: id
+            }
+        })
+    }
+
     async updateVotes({ id, upvotes, downvotes }: TVotes) {
         return await db.answer.update({
             where: {

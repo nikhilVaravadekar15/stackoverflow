@@ -45,6 +45,14 @@ export async function updateQuestion({ qid, question, description }: TEditQuesti
     return response
 }
 
+export async function deleteQuestion(id: string) {
+    const response = await axios.delete(
+        API_BASE_URL + `/api/question?id=${id}`,
+        axiosRequestConfig
+    )
+    return response
+}
+
 export async function getQuestions(limit: number = 10, pageNumber: number = 1, sort: string = "desc", search: string = "") {
     const response = await axios.get(
         API_BASE_URL + `/api/question?limit=${limit}&pageNumber=${pageNumber}&sortBy=${sort}&search=${search}`,
@@ -89,6 +97,14 @@ export async function updateAnswer({ qid, description: answer }: TEditAnswer) {
             "qid": qid,
             "description": answer
         },
+        axiosRequestConfig
+    )
+    return response
+}
+
+export async function deleteAnswer(id: string) {
+    const response = await axios.delete(
+        API_BASE_URL + `/api/answer?id=${id}`,
         axiosRequestConfig
     )
     return response

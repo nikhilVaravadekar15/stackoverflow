@@ -238,7 +238,7 @@ export async function PUT(request: Request, response: Response) {
                 }
             )
         }
-        // 3. add question to database
+        // 3. update question to database
         dbquestion = await questionService.update({ qid, question, description })
         if (!dbquestion) {
             throw new Error()
@@ -271,32 +271,39 @@ export async function PUT(request: Request, response: Response) {
     )
 }
 
-// # TODO 
 export async function DELETE(request: Request, response: Response) {
 
-    let dbquestion: Question | null
-    let body: { id: string }
+    const url: URL = new URL(request.url)
+    const session = await getAuthSession()
 
+    // 0. check for authenticated/authorized user
+    if (!session) {
+        return new Response(
+            JSON.stringify(
+                {
+                    "message": "Unauthorized"
+                }
+            ),
+            {
+                status: 401,
+            }
+        )
+    }
+
+    // 1. check if user exits
     try {
-        // 1. check all fields are present
-        body = await request.json()
-        const { id } = body
-        if (!id) {
+        let user: User | null = await userService.findUniqueUser(session.user?.email!)
+        if (!user) {
             return new Response(
                 JSON.stringify(
                     {
-                        "message": "All fields are required,  Missing mandatory fields"
+                        "message": "Invalid user"
                     }
                 ),
                 {
-                    status: 400,
+                    status: 404,
                 }
             )
-        }
-        // 2. delete question from database
-        dbquestion = await questionService.deleteQuestion(id)
-        if (!dbquestion) {
-            throw new Error()
         }
     } catch (error: any) {
         console.log(error)
@@ -312,16 +319,50 @@ export async function DELETE(request: Request, response: Response) {
         )
     }
 
+    // 2. check all fields are present
+    try {
+        const id: string = url.searchParams.get("id")!
+        if (!id) {
+            return new Response(
+                JSON.stringify(
+                    {
+                        "message": "All fields are required,  Missing mandatory fields"
+                    }
+                ),
+                {
+                    status: 400,
+                }
+            )
+        }
+        // 3. delete question to database
+        let dbquestion: Question | null = await questionService.deleteQuestion(id)
+        if (!dbquestion) {
+            throw new Error()
+        }
+    } catch (error: any) {
+        console.log(error)
+        return new Response(
+            JSON.stringify(
+                {
+                    "message": `Question you trying to delete does not exist`
+                }
+            ),
+            {
+                status: 404,
+            }
+        )
+    }
+
+
+    // 4. response
     return new Response(
         JSON.stringify(
             {
-                "status": true,
-                "dbquestion": dbquestion
-
+                "status": true
             }
         ),
         {
-            status: 202,
+            status: 200,
         }
     )
 }
