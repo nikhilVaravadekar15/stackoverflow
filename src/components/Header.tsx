@@ -32,9 +32,6 @@ export default function Header() {
                         <div className="flex items-center font-bold text-sm text-slate-600">
                             Ask a question
                         </div>
-                        <div className="h-6">
-                            <span className="border border-gray-400 p-0.5 rounded-sm shadow-lg">c</span>
-                        </div>
                     </Link>
                 </div>
                 {

@@ -27,25 +27,21 @@ export async function GET(request: Request, response: Response) {
         } else {
             if (email) {
                 if (answered) {
-                    console.log("answered");
                     [dbquestionsLength, dbquestions] = await questionService.getUserAnsweredQuestions(limit, pageNumber, sortBy, email)
                 } else {
-                    console.log("asked");
                     [dbquestionsLength, dbquestions] = await questionService.getUserAskedQuestions(limit, pageNumber, sortBy, email)
                 }
 
                 if (!dbquestions) {
                     throw new Error()
                 }
-
             }
             else {
+                console.log(search);
                 [dbquestionsLength, dbquestions] = await questionService.getQuestions(limit, pageNumber, sortBy, search)
                 if (!dbquestions) {
                     throw new Error()
                 }
-                console.log("get all");
-
             }
         }
     } catch (error: any) {

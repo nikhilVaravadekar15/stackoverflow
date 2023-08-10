@@ -1,5 +1,8 @@
 "use client"
 
+import {
+    AiOutlineSearch
+} from "react-icons/ai"
 import React, { useState } from 'react'
 import {
     Dialog,
@@ -9,11 +12,29 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import { AiOutlineSearch } from "react-icons/ai"
+import { toast } from "./ui/use-toast"
+import { useRouter } from "next/navigation"
+import { useQueryClient } from "@tanstack/react-query"
 
 
 export default function SearchModal() {
+    const router = useRouter()
+    const queryClient = useQueryClient()
     const [searchQuery, setSearchQuery] = useState<string>("")
+
+    function handleSearch() {
+        if (searchQuery.trim() === "") {
+            toast({
+                variant: "destructive",
+                title: "Search cannot be empty",
+                duration: 3000
+            })
+        } else {
+            router.push(`/?search=${searchQuery}`)
+            queryClient.invalidateQueries(["questions"])
+        }
+    }
+
     return (
         <Dialog>
             <DialogTrigger className="border-none outline-none">
@@ -24,23 +45,30 @@ export default function SearchModal() {
                             Search...
                         </div>
                     </div>
-                    <div className="h-6 mr-3">
+                    {/* <div className="h-6 mr-3">
                         <span className="border p-0.5 rounded-sm shadow-lg">ctrl</span>
                         +
                         <span className="border p-0.5 rounded-sm shadow-lg">k</span>
-                    </div>
+                    </div> */}
                 </div>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="max-w-xl">
                 <DialogHeader>
                     <DialogTitle className="font-normal">Search</DialogTitle>
-                    <div className="w-full h-16 flex items-center border rounded-md">
-                        <AiOutlineSearch className="mx-2 cursor-pointer text-slate-500" size={28} />
-                        <input
-                            placeholder="Search..."
-                            value={searchQuery}
-                            onChange={(event: any) => setSearchQuery(event.target.value)}
-                            className="w-full text-lg text-slate-800 bg-transparent border-none outline-none focus:border-none focus:outline-none"
+                    <div className="relative w-full h-16 flex items-center border rounded-md">
+                        <div className="flex items-center">
+                            <input
+                                placeholder="Search..."
+                                value={searchQuery}
+                                onChange={(event: any) => {
+                                    setSearchQuery(event.target.value)
+                                }}
+                                className="w-full px-2 text-lg text-slate-800 bg-transparent border-none outline-none focus:border-none focus:outline-none"
+                            />
+                        </div>
+                        <AiOutlineSearch
+                            onClick={() => handleSearch()}
+                            className="absolute p-2 h-10 w-10 right-1 border rounded-full bg-slate-100 cursor-pointer hover:bg-slate-200 hover:shadow-md"
                         />
                     </div>
                 </DialogHeader>

@@ -36,5 +36,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 # TODO: 
 1. delete question
 2. delete answer
-3. search
-4. question you answered (prisma query)
+3. question you answered (prisma query)

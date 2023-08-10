@@ -13,10 +13,19 @@ import { toast } from "@/components/ui/use-toast";
 import Loader from '@/components/Loader';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
+export const revalidate = 0;
+export const fetchCache = 'force-no-store';
 
-export default function Home() {
+export default function Home({
+  searchParams
+}: {
+  searchParams: {
+    search?: string;
+  }
+}) {
 
   const queryClient = useQueryClient()
+  const searchQuery: string = searchParams["search"] ? searchParams["search"] : ""
 
   const [limit, setLimit] = useState<number>(10);
   const [sortBy, setSortBy] = useState<string>("desc");
@@ -24,7 +33,7 @@ export default function Home() {
 
   const { status, data: response, error, isFetching, isPreviousData } = useQuery({
     queryKey: ['questions', limit, pageNumber, sortBy],
-    queryFn: async () => await getQuestions(limit, pageNumber, sortBy, ""),
+    queryFn: async () => await getQuestions(limit, pageNumber, sortBy, searchQuery),
     keepPreviousData: true,
     staleTime: 5000,
   })
@@ -34,7 +43,7 @@ export default function Home() {
     if (!isPreviousData) {
       queryClient.prefetchQuery({
         queryKey: ['questions', limit, pageNumber, sortBy],
-        queryFn: async () => await getQuestions(limit, pageNumber, sortBy, ""),
+        queryFn: async () => await getQuestions(limit, pageNumber, sortBy, searchQuery),
       })
     }
   }, [pageNumber, limit, sortBy, isPreviousData, queryClient])
@@ -82,7 +91,6 @@ export default function Home() {
                     <Accordion type="single" collapsible className="w-full flex flex-col gap-2">
                       {
                         response?.data?.data?.questions.map((question: DBQuestions, index: number) => {
-                          console.log(question)
                           return (
                             <Question key={index} question={question} />
                           )

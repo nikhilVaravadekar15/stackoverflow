@@ -26,9 +26,15 @@ class QuestionService {
         })
     }
 
-    async getQuestions(limit: number = 10, pageNumber: number = 1, sort: string = "desc", search: string = "") {
+    async getQuestions(limit: number = 10, pageNumber: number = 1, sort: string = "desc", search: string) {
         return await db.$transaction([
-            db.question.count(),
+            db.question.count({
+                where: {
+                    title: {
+                        contains: search
+                    }
+                }
+            }),
             db.question.findMany({
                 include: {
                     user: true
@@ -37,6 +43,11 @@ class QuestionService {
                 take: limit,
                 orderBy: {
                     asked: sort == "desc" ? "desc" : "asc"
+                },
+                where: {
+                    title: {
+                        contains: search
+                    }
                 }
             })
         ])
