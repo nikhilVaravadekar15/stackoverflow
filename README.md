@@ -22,3 +22,9 @@ To learn more about Next.js, take a look at the following resources:
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+
+## Follow 
+- [nextAuth | google OAuth 2.0](https://next-auth.js.org/providers/google)
+- [nextAuth | github OAuth 2.0](https://next-auth.js.org/providers/github)
+- [Setting up Amazon Simple Email Service](https://docs.aws.amazon.com/ses/latest/dg/setting-up.html)
+- [Moving out of the Amazon SES sandbox](https://docs.aws.amazon.com/ses/latest/dg/request-production-access.html?icmpid=docs_ses_console)

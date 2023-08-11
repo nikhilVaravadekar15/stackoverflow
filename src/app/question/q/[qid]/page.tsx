@@ -254,7 +254,7 @@ function Answers(props: { user: TUser, answers: Answer[] }) {
         <>
             {
                 props.answers.length === 0 ? (
-                    <div className="flex items-center cursor-pointer">
+                    <div className="flex gap-1 items-center cursor-pointer">
                         <h1 className="text-2xl font-semibold text-slate-700">
                             Not Answered Yet ...
                         </h1>
@@ -264,6 +264,7 @@ function Answers(props: { user: TUser, answers: Answer[] }) {
                             width={48}
                             height={48}
                             draggable={false}
+                            className="rounded-md"
                         />
                     </div>
                 ) : (

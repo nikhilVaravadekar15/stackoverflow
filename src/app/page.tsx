@@ -76,6 +76,7 @@ export default function Home({
                     width={256}
                     height={256}
                     draggable={false}
+                    className="rounded-md"
                   />
                   <div className="text-lg flex gap-1">
                     <span className="font-medium">Stack</span>

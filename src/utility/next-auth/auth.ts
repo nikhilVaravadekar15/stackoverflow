@@ -40,12 +40,14 @@ export const authOptions: NextAuthOptions = {
         async signIn({ account, user, email, profile }) {
             const dbUser: User | null = await userService.findUniqueUser(user.email!)
 
-            if (!dbUser) {
-                try {
-                    mailService.sendMail(dbUser!)
-                } catch (error: any) {
-                    console.log(error);
+            try {
+                if (!dbUser) {
+                    await mailService.sendOnboardingMail(dbUser!)
+                } else {
+                    await mailService.sendWelcomingBackMail(dbUser!)
                 }
+            } catch (error: any) {
+                console.log(error);
             }
 
             return true

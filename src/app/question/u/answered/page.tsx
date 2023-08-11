@@ -73,17 +73,18 @@ export default function Answered() {
                                         width={256}
                                         height={256}
                                         draggable={false}
+                                        className="rounded-md"
                                     />
                                     <div className="text-lg flex gap-1">
                                         <span className="font-medium">Stack</span>
                                         <span className="font-bold">Underflow</span>
                                     </div>
-                                    <div className="text-lg text-center flex flex-col gap-1">
+                                    <div className="text-lg text-center flex flex-col gap-1 items-center justify-center">
                                         <span className="">
-                                            {"Looks like you haven't asked any questions yet."}
+                                            {"Looks like you haven't answered any questions yet."}
                                         </span>
-                                        <span className="p-1 bg-orange-50 rounded-sm">
-                                            {"Pro tip: Before you ask anything, search you might find something."}
+                                        <span className="w-fit  p-1 bg-orange-50 rounded-sm">
+                                            {"It's completely fine.."}
                                         </span>
                                     </div>
                                 </div>
