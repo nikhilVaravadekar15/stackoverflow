@@ -51,7 +51,7 @@ export default function AuthModal() {
             })
         }
 
-    }, [])
+    }, [searchParams])
 
     return (
         <Dialog>

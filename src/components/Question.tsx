@@ -11,7 +11,7 @@ import { Question } from '@prisma/client'
 import { months } from '@/data'
 
 
-export default function Question({ question }: { question: Question }) {
+export default function Question({ question }: { question: Question | any }) {
 
     return (
         <AccordionItem value={`${question.id}`}>

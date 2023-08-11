@@ -80,14 +80,12 @@ class QuestionService {
         ])
     }
 
-    // # TODO: Fix this
-    // SELECT * FROM question LEFT JOIN answer ON question.user_id = user_id
     async getUserAnsweredQuestions(limit: number = 10, pageNumber: number = 1, sort: string = "desc", email: string) {
         return await db.$transaction([
             db.question.count({
                 where: {
                     answers: {
-                        every: {
+                        some: {
                             user: {
                                 email: email
                             }
@@ -98,7 +96,7 @@ class QuestionService {
             db.question.findMany({
                 where: {
                     answers: {
-                        every: {
+                        some: {
                             user: {
                                 email: email
                             }

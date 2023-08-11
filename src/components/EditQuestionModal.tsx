@@ -63,7 +63,7 @@ export default function EditQuestionModal({ qid, question: title, description: d
 
     return (
         <Dialog>
-            <DialogTrigger className="border-none outline-none">
+            <DialogTrigger asChild className="border-none outline-none">
                 <div className="border-blue-500 hover:text-blue-500 hover:border-b-2">
                     Edit question
                 </div>

@@ -73,7 +73,7 @@ export default function AskaQuestion() {
     }
 
     if (response?.status === 201 && response?.data.status === true) {
-        router.push("/question/u/asked")
+        router.push(`/question/q/${response?.data.question.id!}`)
     }
 
     return (

@@ -163,7 +163,8 @@ export async function POST(request: Request, response: Response) {
     return new Response(
         JSON.stringify(
             {
-                "status": true
+                "status": true,
+                "question": dbquestion!
             }
         ),
         {

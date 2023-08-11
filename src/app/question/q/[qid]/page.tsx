@@ -143,19 +143,10 @@ export default function QuestionPage({ params }: { params: { qid: string } }) {
                                         {
                                             sessionStatus === "authenticated" && sessionData.user.email === response?.data?.data?.user!.email && (
                                                 <>
-                                                    <TooltipProvider>
-                                                        <Tooltip>
-                                                            <TooltipTrigger>
-                                                                <DeleteDialog
-                                                                    type="question"
-                                                                    id={response?.data?.data?.id}
-                                                                />
-                                                            </TooltipTrigger>
-                                                            <TooltipContent>
-                                                                <p className="p-2 text-red-500">Delete this question</p>
-                                                            </TooltipContent>
-                                                        </Tooltip>
-                                                    </TooltipProvider>
+                                                    <DeleteDialog
+                                                        type="question"
+                                                        id={response?.data?.data?.id}
+                                                    />
                                                 </>
                                             )
                                         }
@@ -200,12 +191,14 @@ export default function QuestionPage({ params }: { params: { qid: string } }) {
                                                     <Tooltip>
                                                         <TooltipTrigger>
                                                             <Button
-                                                                variant={"outline"}
+                                                                asChild
+                                                                variant="outline"
                                                                 onClick={() => handleCommentSubmit()}
-                                                                className="flex items-center gap-2 font-semibold"
                                                             >
-                                                                <span>Submit</span>
-                                                                <BiRightArrowAlt size={"1.25rem"} />
+                                                                <div className="flex items-center gap-2 font-semibold">
+                                                                    <span>Submit</span>
+                                                                    <BiRightArrowAlt size={"1.25rem"} />
+                                                                </div>
                                                             </Button>
                                                         </TooltipTrigger>
                                                         <TooltipContent>
@@ -280,7 +273,7 @@ function Answers(props: { user: TUser, answers: Answer[] }) {
                         </h1>
                         <div className="flex flex-col gap-12">
                             {
-                                props.answers?.map((answer: Answer, index: number) => {
+                                props.answers?.map((answer: Answer | any, index: number) => {
                                     return (
                                         <div className="flex gap-2" key={index}>
                                             <div className="flex gap-8 flex-col items-center">
@@ -382,19 +375,10 @@ function Answers(props: { user: TUser, answers: Answer[] }) {
                                                         {
                                                             sessionStatus === "authenticated" && sessionData.user.email === answer?.user!.email && (
                                                                 <>
-                                                                    <TooltipProvider>
-                                                                        <Tooltip>
-                                                                            <TooltipTrigger>
-                                                                                <DeleteDialog
-                                                                                    type="answer"
-                                                                                    id={answer.id!}
-                                                                                />
-                                                                            </TooltipTrigger>
-                                                                            <TooltipContent>
-                                                                                <p className="p-2 text-red-500">Delete this answer</p>
-                                                                            </TooltipContent>
-                                                                        </Tooltip>
-                                                                    </TooltipProvider>
+                                                                    <DeleteDialog
+                                                                        type="answer"
+                                                                        id={answer.id!}
+                                                                    />
                                                                 </>
                                                             )
                                                         }
